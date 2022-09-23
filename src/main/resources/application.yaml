@@ -1,0 +1,52 @@
+spring:
+  application:
+    name: ic-overview-service
+  #kafka.properties.spring.json.use.type.headers: false
+  cloud:
+    stream:
+      kafka:
+        streams:
+          binder:
+            configuration:
+              default.key.serde: org.apache.kafka.common.serialization.Serdes$StringSerde
+              default.value.serde: org.apache.kafka.common.serialization.Serdes$StringSerde
+            brokers: "insurance-cluster-kafka-bootstrap.insurance-kafka.svc.cluster.local:9092"
+            functions:
+              joinPartnerAndContract-in-0:
+                applicationId: ic-overview-join-partner-and-contracts
+              consumeOverview:
+                applicationId: ic-overview-consume-overview
+            application-id: ic-overview-service
+          bindings:
+            joinPartnerAndContract-in-0:
+              consumer:
+                key-serde: org.apache.kafka.common.serialization.Serdes$StringSerde
+                value-serde: ch.mhaspra.insurancecase.overviewservice.adapter.kafka.serdes.PartnerSerde
+            joinPartnerAndContract-in-1:
+              consumer:
+                key-serde: org.apache.kafka.common.serialization.Serdes$StringSerde
+                value-serde: ch.mhaspra.insurancecase.overviewservice.adapter.kafka.serdes.ContractSerde
+            joinPartnerAndContract-out-0:
+              producer:
+                key-serde: org.apache.kafka.common.serialization.Serdes$StringSerde
+                value-serde: ch.mhaspra.insurancecase.overviewservice.adapter.kafka.serdes.OverviewSerde
+            consumeOverview-in-0:
+              consumer:
+                key-serde: org.apache.kafka.common.serialization.Serdes$StringSerde
+                value-serde: ch.mhaspra.insurancecase.overviewservice.adapter.kafka.serdes.OverviewSerde
+      bindings:
+        joinPartnerAndContract-in-0:
+          destination: partner-topic
+        joinPartnerAndContract-in-1:
+          destination: contract-topic
+        joinPartnerAndContract-out-0:
+          destination: overview-topic
+        consumeOverview-in-0:
+          destination: overview-topic
+    function:
+      definition: joinPartnerAndContract;consumeOverview
+  elasticsearch:
+    uris: es-overview-es-http.insurance-kafka.svc.cluster.local:9200
+    password:
+    username: elastic
+
