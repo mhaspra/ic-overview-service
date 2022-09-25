@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ic-overview-deployment
+  labels:
+    app: ic-overview
+spec:
+  selector:
+    matchLabels:
+      app: ic-overview
+  template:
+    metadata:
+      labels:
+        app: ic-overview
+    spec:
+      containers:
+        - name: ic-overview-container
+          image: ic-overview-service:1.0
+          ports:
+            - containerPort: 8080

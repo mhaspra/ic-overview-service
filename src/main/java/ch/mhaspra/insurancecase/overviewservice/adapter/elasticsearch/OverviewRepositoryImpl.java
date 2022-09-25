@@ -6,8 +6,10 @@ import ch.mhaspra.insurancecase.overviewservice.application.OverviewRepository;
 import ch.mhaspra.insurancecase.overviewservice.domain.commands.AddContractToPartnerCmd;
 import ch.mhaspra.insurancecase.overviewservice.domain.overview.Overview;
 import ch.mhaspra.insurancecase.overviewservice.domain.commands.RemoveContractFromPartnerCmd;
+import ch.mhaspra.insurancecase.overviewservice.domain.overview.Partner;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import reactor.core.publisher.Flux;
 
 import java.util.ArrayList;
 import java.util.Optional;
@@ -15,17 +17,25 @@ import java.util.Optional;
 @Component
 public class OverviewRepositoryImpl implements OverviewRepository {
     private final OverviewEsRepository esRepository;
+    private final ReactiveOverviewESRepository reactiveOverviewESRepository;
 
     @Autowired
-    public OverviewRepositoryImpl(OverviewEsRepository esRepository) {
+    public OverviewRepositoryImpl(OverviewEsRepository esRepository, ReactiveOverviewESRepository reactiveOverviewESRepository) {
         this.esRepository = esRepository;
+        this.reactiveOverviewESRepository = reactiveOverviewESRepository;
     }
 
     @Override
     public Overview findAll(){
         Iterable<PartnerContractsOverview> all = esRepository.findAll();
-        return OverviewMapper.map(all);
+        return OverviewIterableMapper.map(all);
     }
+
+    @Override
+    public Flux<Partner> findAllReactive() {
+        return reactiveOverviewESRepository.findAll().map(OverviewMapper::map);
+    }
+
 
     @Override
     public void add(AddContractToPartnerCmd addContractToPartnerCmd) {

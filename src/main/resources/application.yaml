@@ -10,6 +10,9 @@ spring:
             configuration:
               default.key.serde: org.apache.kafka.common.serialization.Serdes$StringSerde
               default.value.serde: org.apache.kafka.common.serialization.Serdes$StringSerde
+              commit:
+                interval:
+                  ms: 500
             brokers: "insurance-cluster-kafka-bootstrap.insurance-kafka.svc.cluster.local:9092"
             functions:
               joinPartnerAndContract-in-0:

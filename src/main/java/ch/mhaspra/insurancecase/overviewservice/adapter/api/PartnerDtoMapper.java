@@ -14,7 +14,7 @@ public class PartnerDtoMapper {
         return overview.partners().stream().map(PartnerDtoMapper::map).toList();
     }
 
-    private static PartnerDto map(Partner partner){
+    public static PartnerDto map(Partner partner){
         return new PartnerDto(partner.partnerNr(), partner.name(), map(partner.contracts()));
     }
 

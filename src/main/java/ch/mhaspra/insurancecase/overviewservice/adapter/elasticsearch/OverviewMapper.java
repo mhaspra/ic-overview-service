@@ -10,11 +10,8 @@ import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 public class OverviewMapper {
-    public static Overview map(Iterable<PartnerContractsOverview> all){
-        return new Overview(StreamSupport.stream(all.spliterator(), false).map(OverviewMapper::map).toList());
-    }
 
-    private static Partner map(PartnerContractsOverview partnerContractsOverview){
+    public static Partner map(PartnerContractsOverview partnerContractsOverview){
         return new Partner(
                 partnerContractsOverview.partnerNr,
                 partnerContractsOverview.name,
